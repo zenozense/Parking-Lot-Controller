@@ -1,0 +1,222 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset=utf8>
+  <meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <style>
+    :root {
+      color-scheme: light;
+      box-sizing: border-box;
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: env(safe-area-inset-bottom, 0px)
+    }
+
+    html {
+      scroll-padding-top: env(safe-area-inset-top, 0px)
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font: 14px -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #fff;
+      color: #000
+    }
+
+    img {
+      max-width: 100%
+    }
+
+    [hidden]:not([hidden=until-found i]) {
+      display: none !important
+    }
+  </style>
+</head>
+
+<body>
+  <title>Smart Parking System</title>
+  <meta name="claude:viewport-fit-sides" content="cover">
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@500;700&family=DotGothic16&family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap"
+    rel="stylesheet">
+
+  <!-- Each <section> below is self-contained. Delete a whole <section class="row"> to drop that topic. -->
+
+  <main>
+    <!-- SECTION: Hero + live simulator -->
+    <header class="hero">
+      <div class="wrap hero-grid">
+        <div class="hero-text">
+          <p class="course">Physical Computing Project 2026<br>IT KMITL</p>
+          <h1>Smart Parking System</h1>
+          <p class="lede">ระบบแสดงจำนวนช่องจอดรถว่างหน้าคณะ IT เพื่อให้ผู้ขับรถรู้สถานะที่จอดรถก่อนขับเข้าไป</p>
+          <p class="tag">ลองกดปุ่มทางขวา (หรือด้านล่างบนมือถือ) เพื่อดูว่าระบบนับรถและแสดงผลอย่างไร</p>
+        </div>
+
+        <div class="sim" id="sim">
+          <p class="sim-head"><b>จำลองการทำงาน</b> ใช้ตัวอย่าง <span id="totalLabel">12</span> ช่องจอด</p>
+
+          <div class="lot">
+            <div class="gate" id="gate">
+              <div class="gate-post"></div>
+              <div class="gate-arm"></div>
+              <p class="gate-label"><b id="gateText">ปิด</b>ไม้กั้น</p>
+            </div>
+            <div class="bays" id="bays" aria-label="ผังช่องจอดรถ"></div>
+          </div>
+
+          <div class="controls">
+            <button class="btn primary" id="btnIn" type="button">รถเข้า</button>
+            <button class="btn" id="btnOut" type="button">รถออก</button>
+          </div>
+
+          <div class="display">
+            <div class="lcd" aria-hidden="true">
+              <div class="lcd-in" id="lcd"></div>
+            </div>
+            <div class="status-row">
+              <span class="led" id="led" aria-hidden="true"></span>
+              <p class="status-text" id="statusText" aria-live="polite">ว่าง 7 ช่อง</p>
+              <div class="calc">
+                <p class="eq"><span id="fT">12</span><i>−</i><span id="fP">5</span><i>=</i><span id="fF">7</span></p>
+                <small>ช่องจอดทั้งหมด − รถที่จอดอยู่ = ช่องว่าง</small>
+              </div>
+            </div>
+          </div>
+
+          <p class="sim-note">ปุ่มแทนสัญญาณจากเซนเซอร์ HC-SR04 ที่ตรวจจับรถเข้าและออก จำนวนช่องในตัวอย่างนี้เป็นค่าสมมติ
+          </p>
+        </div>
+      </div>
+    </header>
+
+    <div class="wrap">
+      <!-- SECTION: ปัญหา -->
+      <section class="row" id="problem">
+        <h2>ปัญหา</h2>
+        <p class="prose big">ถนนที่จอดรถคณะ IT แคบ ทำให้สัญจรลำบากเมื่อมีรถหนาแน่น เมื่อที่จอดรถเต็ม
+          ผู้ขับรถต้องเข้าไปวนหาที่จอดในพื้นที่แคบ ทำให้เกิดรถติดและเสี่ยงต่ออุบัติเหตุ</p>
+      </section>
+
+      <!-- SECTION: จุดประสงค์ -->
+      <section class="row" id="objectives">
+        <h2>จุดประสงค์ของโปรเจกต์</h2>
+        <ul class="marks lg">
+          <li>แสดงจำนวนช่องจอดรถที่ว่างให้ผู้ขับรถทราบก่อนเข้าพื้นที่</li>
+          <li>ลดการวนหาที่จอดรถในถนนแคบ</li>
+          <li>ลดความหนาแน่นของการจราจรหน้าคณะ</li>
+        </ul>
+      </section>
+
+      <!-- SECTION: ผู้ที่ได้รับประโยชน์ -->
+      <section class="row" id="audience">
+        <h2>ผู้ที่ได้รับประโยชน์</h2>
+        <p class="prose big">ผู้ที่มาจอดรถที่คณะ IT</p>
+      </section>
+
+      <!-- SECTION: รายละเอียดโปรเจกต์ -->
+      <section class="row" id="details">
+        <h2>รายละเอียดโปรเจกต์</h2>
+        <div class="cols">
+          <div>
+            <h3>Input</h3>
+            <ul class="marks">
+              <li>จำนวนช่องจอดรถทั้งหมด</li>
+              <li>จำนวนรถที่เข้ามาจอด</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Output</h3>
+            <ul class="marks">
+              <li>LED, จอ แสดงจำนวนช่องจอดรถที่ว่าง</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION: หลักการทำงาน -->
+      <section class="row" id="how">
+        <h2>หลักการทำงาน</h2>
+        <ol class="steps">
+          <li><span>ระบบกำหนดจำนวนช่องจอดทั้งหมดไว้ล่วงหน้า</span></li>
+          <li><span>เซนเซอร์ตรวจจับรถที่เข้า/ออก และนับจำนวนรถที่จอดอยู่</span></li>
+          <li><span>ระบบคำนวณจำนวนช่องว่าง<br><span class="formula">ช่องว่าง = ช่องจอดทั้งหมด −
+                จำนวนรถที่จอดอยู่</span></span></li>
+          <li><span>แสดงผลด้วย LED ให้ผู้ขับรถเห็น (เมื่อเต็มจะแสดงสถานะเต็ม)</span></li>
+        </ol>
+      </section>
+
+      <!-- SECTION: ความน่าสนใจ -->
+      <section class="row" id="novelty">
+        <h2>ความน่าสนใจและแปลกใหม่</h2>
+        <ul class="marks lg">
+          <li>ต้นทุนต่ำ</li>
+          <li>แก้ปัญหาจริงในพื้นที่จริง</li>
+        </ul>
+      </section>
+
+      <!-- SECTION: ประโยชน์ -->
+      <section class="row" id="benefits">
+        <h2>ประโยชน์</h2>
+        <dl class="dl">
+          <div>
+            <dt>ผู้ขับรถ</dt>
+            <dd>ประหยัดเวลา ไม่ต้องวนหาที่</dd>
+          </div>
+          <div>
+            <dt>การจราจรในพื้นที่</dt>
+            <dd>ลดรถติดและความเสี่ยงบนถนนแคบ</dd>
+          </div>
+          <div>
+            <dt>สิ่งแวดล้อม</dt>
+            <dd>รถวนน้อยลง ใช้น้ำมันและปล่อยมลพิษน้อยลง</dd>
+          </div>
+        </dl>
+      </section>
+
+      <!-- SECTION: อุปกรณ์ -->
+      <section class="row" id="hardware">
+        <h2>อุปกรณ์</h2>
+        <ul class="parts">
+          <li><b>Arduino Uno</b><span>บอร์ดควบคุมระบบ</span></li>
+          <li><b>HC-SR04</b><span>เซนเซอร์อัลตราโซนิก ตรวจจับรถเข้า/ออก</span></li>
+          <li><b>LED</b><span>แสดงสถานะว่างหรือเต็ม</span></li>
+          <li><b>1602 LCD I2C</b><span>แสดงจำนวนช่องจอดที่ว่าง</span></li>
+          <li><b>Servo SG90</b><span>ไม้กั้น</span></li>
+          <li><b>Breadboard, สายจัมเปอร์, ตัวต้านทาน 220Ω</b><span>ต่อวงจร</span></li>
+        </ul>
+      </section>
+
+      <!-- SECTION: ไลบรารี -->
+      <section class="row" id="libraries">
+        <h2>ไลบรารี</h2>
+        <ul class="libs">
+          <li><code>Servo.h</code><span>ควบคุมไม้กั้น</span></li>
+          <li><code>LiquidCrystal_I2C</code><span>ควบคุมจอ LCD</span></li>
+        </ul>
+      </section>
+
+      <!-- SECTION: สมาชิก -->
+      <section class="row" id="team">
+        <h2>สมาชิกในกลุ่ม</h2>
+        <ul class="team">
+          <li><b>อินทัช ทิพเวช</b><span>68070208</span></li>
+          <li><b>กิตติภณ สายสหัส</b><span>68070219</span></li>
+          <li><b>ธวชินี ลิ้มเลิศ</b><span>68070266</span></li>
+          <li><b>นราพงษ์ กระดังงา</b><span>68070275</span></li>
+        </ul>
+      </section>
+    </div>
+
+    <footer>
+      <div class="wrap">Physical Computing Project 2026 - IT KMITL</div>
+    </footer>
+  </main>
+  <script src="main.js" defer></script>
+</body>
+
+</html>
