@@ -363,3 +363,67 @@ footer { border-top: 1px solid var(--line); padding-block: 28px 40px; color: var
   .car { animation: none; }
   .gate-arm, .led { transition: none; }
 }
+/* ---------- Page base (moved out of the old inline <style>) ---------- */
+:root {
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+:target { scroll-margin-top: 16px; }
+
+.skip {
+  position: absolute; left: 16px; top: -80px; z-index: 10;
+  padding: 10px 16px;
+  background: var(--paint); color: var(--on-paint);
+  font-weight: 600; text-decoration: none; border-radius: 4px;
+}
+.skip:focus { top: max(16px, env(safe-area-inset-top, 0px)); }
+
+/* ---------- Inline code inside content ---------- */
+.dl code, .parts code, .prose code {
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  font-size: 0.9rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 1px 6px;
+  overflow-wrap: anywhere;
+}
+.stack { display: grid; gap: 20px; min-width: 0; }
+
+/* ---------- Source code ---------- */
+.src { display: grid; gap: 16px; min-width: 0; }
+.actions { display: flex; }
+a.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  flex: 0 1 auto;
+  text-align: center; text-decoration: none;
+}
+.codebox summary {
+  display: flex; align-items: center;
+  min-height: 48px; padding: 10px 18px;
+  border: 2px solid var(--fg); border-radius: 4px;
+  font-weight: 600; cursor: pointer;
+  list-style: none;
+}
+.codebox summary::-webkit-details-marker { display: none; }
+.codebox summary::before { content: "+"; width: 1.4em; color: var(--paint-ink); font-weight: 700; }
+.codebox[open] summary::before { content: "−"; }
+.codebox[open] summary { margin-bottom: 12px; }
+.code {
+  margin: 0;
+  padding: 16px;
+  background: var(--asphalt);
+  color: #D7DEE6;
+  border-radius: 4px;
+  overflow: auto;
+  max-height: min(70vh, 640px);
+  font: 0.82rem/1.65 ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  tab-size: 2;
+  -webkit-overflow-scrolling: touch;
+}
+.code code { font: inherit; }
+.code .c { color: #9AA6B4; }
