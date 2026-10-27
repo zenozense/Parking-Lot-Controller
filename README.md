@@ -56,3 +56,6 @@
 **ไลบรารี**
 - Servo.h
 - LiquidCrystal_I2C
+
+## คลิปนำเสนอโปรเจกต์
+https://youtu.be/JWfumg-1lxc
